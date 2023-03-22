@@ -1,0 +1,107 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/results-exam-lists',batchKey,classKey]" routerLinkActive="active">
+        <ion-icon name="return-up-back-outline">
+        </ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Result Statistics</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Class : {{className}}</ion-card-title>
+      <ion-card-title>Exam : {{examKey }}</ion-card-title>
+      <p *ngIf="isCorrectionCompleted == false">All teachers not uploaded marks. Please inform your subject teachers to complete paper correction and upload marks on this app.</p>
+      <p *ngIf="isCorrectionCompleted == true">All papers correction completed, below is your class results.</p>
+    </ion-card-header>
+    <ion-card-content>
+
+      <ion-list>
+        <ion-item>
+          <div class="itemClass">
+            <div>Percentage</div>
+            <div>Students</div>
+          </div>
+        </ion-item>
+        <!-- <ion-item (click)="routeToStudents('distinction')"> -->
+        <ion-item >
+          <div class="itemClass">
+            <div>Distinction (85% - 100%)</div>
+            <div>{{distinction.length}}</div>
+          </div>
+        </ion-item>
+        <!-- (click)="routeToStudents('firstClass')" -->
+        <ion-item >
+          <div class="itemClass">
+            <div>First Class (60% - 84%)</div>
+            <div>{{firstClass.length}}</div>
+          </div>
+        </ion-item>
+        <!-- (click)="routeToStudents('secondClass')" -->
+        <ion-item >
+          <div class="itemClass">
+            <div>Second Class (35% - 59%)</div>
+            <div>{{secondClass.length}}</div>
+          </div>
+        </ion-item>
+        <!-- (click)="routeToStudents('fails')" -->
+        <ion-item >
+          <div class="itemClass">
+            <div>Fail (Belove 35%)</div>
+            <div *ngIf="failsCount != totalStudents">{{fails.length}}</div>
+            <div *ngIf="failsCount == totalStudents">0</div>
+          </div>
+        </ion-item>
+        <!-- (click)="routeToStudents('notAttended')" -->
+        <ion-item >
+          <div class="itemClass">
+            <div>Not attended</div>
+            <div *ngIf="isCorrectionCompleted == false">{{notAttended.length}}</div>
+            <div *ngIf="isCorrectionCompleted">0</div>
+          </div>
+        </ion-item>
+      </ion-list>
+      <!-- <ion-button (click)="routeToStudents('all')">View All</ion-button> -->
+    </ion-card-content>
+  </ion-card>
+
+  <p *ngIf="tilted" style="margin-left:10px;color: black; display: flex; justify-content: center; flex-direction: column;">
+    Note :
+    <b>D - Distinction</b>
+    <b>FC - First Class</b>
+    <b>SC - Second Class</b>
+    <b>F - Fail</b>
+  </p>
+
+  <ion-card>
+    <div [class]="[cssClassName]">
+      <div class="card" (click)="toggleTilt()">
+        <div class="photo"></div>
+        <h2>{{examKey}} Results</h2>
+        <p>Click Here</p>
+        <div class="chart">
+          <div class="bar bar1" [style.margin-top]="25" [style.height.px]="distinction.length * 5 + 75">
+            <span>{{distinction.length}}</span></div>
+          <div class="bar bar2" [style.margin-top]="30" [style.height.px]="firstClass.length * 5 + 75">
+            <span>{{firstClass.length}}</span></div>
+          <div class="bar bar3" [style.margin-top]="25" [style.height.px]="secondClass.length * 5 + 75">
+            <span>{{secondClass.length}}</span></div>
+          <div *ngIf="fails.length != totalStudents" class="bar bar4" [style.margin-top]="30" [style.height.px]="fails.length * 5 + 75">
+            <span>{{fails.length}}</span>
+          </div>
+          <div *ngIf="fails.length == totalStudents" class="bar bar4" [style.margin-top]="30" [style.height.px]="75">
+            <span>0</span>
+          </div>
+        </div>
+        <h3>{{totalStudents}} Students</h3>
+      </div>
+    </div>
+  </ion-card>
+
+
+</ion-content>

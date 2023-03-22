@@ -87,6 +87,34 @@ const routes: Routes = [
     path: 'attendance-by-calendar',
     loadChildren: () => import('./attendance/attendance-by-calendar/attendance-by-calendar.module').then( m => m.AttendanceByCalendarPageModule)
   },
+  {
+    path: 'exam-lists/:id/:subject/:batchKey',
+    loadChildren: () => import('./exams/exam-lists/exam-lists.module').then( m => m.ExamListsPageModule)
+  },
+  {
+    path: 'my-classes/:id',
+    loadChildren: () => import('./exams/my-classes/my-classes.module').then( m => m.MyClassesPageModule)
+  },
+  {
+    path: 'update-marks/:classKey/:subject/:batchKey/:examKey',
+    loadChildren: () => import('./exams/update-marks/update-marks.module').then( m => m.UpdateMarksPageModule)
+  },
+  {
+    path: 'results',
+    loadChildren: () => import('./results/results/results.module').then( m => m.ResultsPageModule)
+  },
+  {
+    path: 'results-exam-lists/:batchKey/:classKey',
+    loadChildren: () => import('./results/results-exam-lists/results-exam-lists.module').then( m => m.ResultsExamListsPageModule)
+  },
+  {
+    path: 'results-statistics/:batchKey/:classKey/:examKey',
+    loadChildren: () => import('./results/results-statistics/results-statistics.module').then( m => m.ResultsStatisticsPageModule)
+  },
+  {
+    path: 'results-students/:batchKey/:classKey/:examKey',
+    loadChildren: () => import('./results/results-students/results-students.module').then( m => m.ResultsStudentsPageModule)
+  },
 ];
 
 @NgModule({

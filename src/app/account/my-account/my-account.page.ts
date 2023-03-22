@@ -17,13 +17,13 @@ export class MyAccountPage implements OnInit {
   public auth = getAuth();
   public loggedInUserClass: any;
   public currentBatchKey: any;
-  public loggedInUserProfile:any;
-  public role:any
+  public loggedInUserProfile: any;
+  public role: any
 
   constructor(
     private router: Router,
     private alertController: AlertController
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.verifyUserLogin();
@@ -62,36 +62,39 @@ export class MyAccountPage implements OnInit {
   }
 
   async userSignOut() {
-    const alert = await this.alertController.create({
-      header: 'Are you sure?',
-      cssClass: 'custom-alert',
-      buttons: [
-        {
-          text: 'No',
-          cssClass: 'alert-button-cancel',
-          handler: async () => {
-            alert.dismiss();
-          },
-        },
-        {
-          text: 'Yes',
-          cssClass: 'alert-button-confirm',
-          handler: async () => {
-            alert.dismiss();
-            signOut(this.auth)
-              .then(() => {
-                UserConstant.currentUser = null;
-                this.router.navigateByUrl('/splash');
-              })
-              .catch((error) => {
-                this.router.navigateByUrl('/home');
-              });
-          },
-        },
-      ],
-    });
+    // const alert = await this.alertController.create({
+    //   header: 'Are you sure?',
+    //   cssClass: 'custom-alert',
+    //   buttons: [
+    //     {
+    //       text: 'No',
+    //       cssClass: 'alert-button-cancel',
+    //       handler: async () => {
+    //         alert.dismiss();
+    //       },
+    //     },
+    //     {
+    //       text: 'Yes',
+    //       cssClass: 'alert-button-confirm',
+    //       handler: async () => {
+    //         await alert.dismiss()
+    //         this.signOutHere()
+    //       },
+    //     },
+    //   ],
+    // });
 
-    await alert.present();
+    // await alert.present();
+  }
+
+  signOutHere() {
+    const auth = getAuth();
+    signOut(auth).then(() => {
+      UserConstant.currentUser = null;
+      this.router.navigateByUrl('/splash')
+    }).catch((error) => {
+      this.router.navigateByUrl('/home')
+    });
   }
 
   getCurrentBatchKey() {

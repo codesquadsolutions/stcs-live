@@ -97,7 +97,8 @@ export class StudentsPage implements OnInit {
           tempObj.name = value.firstName + ' ' + value.lastName;
           tempObj.profilePic = value.profilePic;
           tempObj.key = element.key;
-          this.sourceStudentList.push(tempObj);
+          this.sourceStudentList.push(tempObj)
+          this.sourceStudentList.sort((a: any, b: any) => a.name.localeCompare(b.name))
           if (this.sourceStudentList.length == totalStudents) {
             this.studentList = this.sourceStudentList.sort();
             await this.dismissLoadingController();

@@ -7,6 +7,7 @@ import { Teacher } from 'src/app/models/teacher.model';
 import { OverlayEventDetail } from '@ionic/core/components';
 import { getAuth } from 'firebase/auth';
 import { UserConstant } from 'src/app/appConstants/userConstants';
+import { ClassService } from 'src/app/services/class/class.service';
 
 @Component({
   selector: 'app-classes',
@@ -16,8 +17,8 @@ import { UserConstant } from 'src/app/appConstants/userConstants';
 export class ClassesPage implements OnInit {
 
   private loading: any
-  allClasses: MyClass[] = []
-  sourceAllClasses: MyClass[] = []
+  allClasses: any = []
+  sourceAllClasses: any = []
   @ViewChild(IonModal) modal?: IonModal;
   isSearch: boolean = false
   public batchKey: any
@@ -30,8 +31,8 @@ export class ClassesPage implements OnInit {
   staffs: any
   searchString: string = ""
   public auth = getAuth()
-  public currentUser:any = UserConstant.currentUser
-  constructor(private router: Router, private activatedRouter: ActivatedRoute, private classLoadingControl: LoadingController) { }
+  public currentUser: any = UserConstant.currentUser
+  constructor(private classService: ClassService, private router: Router, private activatedRouter: ActivatedRoute, private classLoadingControl: LoadingController) { }
 
   ngOnInit() {
     this.checkUserLoggedIn()
@@ -62,54 +63,62 @@ export class ClassesPage implements OnInit {
     )
   }
 
-  getClasses() {
-    const classesRef = ref(this.database, `classes/${this.batchKey}`);
-    const classQuery = query(classesRef, orderByChild('className'));
-
-    onValue(classQuery, async (snapshot) => {
-      await this.pleaseWaitLoader()
-      if (snapshot.val() == null) {
-        await this.dismissLoadingController()
-        return
-      }
-      const totalClasses = snapshot.size
-      this.sourceAllClasses = []
-      snapshot.forEach((childSnapshot) => {
-        let teacher: any
-        this.getTeacher(childSnapshot.val().classTeacher).then(value => {
-          teacher = value
-          var searchKey: any = childSnapshot.key
-          this.getCount(searchKey).then(async value => {
-            var tempObj: MyClass = childSnapshot.val()
-            tempObj.classTeacher = teacher.firstName + " " + teacher.lastName
-            tempObj.count = value
-            tempObj.key = childSnapshot.key
-            this.sourceAllClasses.push(tempObj);
-            if (this.sourceAllClasses.length == totalClasses) {
-              this.allClasses = this.sourceAllClasses
-              await this.dismissLoadingController()
-            }
-          })
-        })
-      })
+  async getClasses() {
+    // const classesRef = ref(this.database, `classes/${this.batchKey}`);
+    // const classQuery = query(classesRef, orderByChild('className'));
+    await this.pleaseWaitLoader()
+    this.classService.getAllClassesWithTeachers(this.batchKey).then(async (result) => {
+      console.log(result)
+      this.allClasses = result
+      this.sourceAllClasses = result
+      await this.dismissLoadingController()
     })
+
+    // onValue(classQuery, async (snapshot) => {
+    //   await this.pleaseWaitLoader()
+    //   if (snapshot.val() == null) {
+    //     await this.dismissLoadingController()
+    //     return
+    //   }
+    //   const totalClasses = snapshot.size
+    //   this.sourceAllClasses = []
+    //   snapshot.forEach((childSnapshot) => {
+    //     let teacher: any
+    //     this.getTeacher(childSnapshot.val().classTeacher).then(value => {
+    //       teacher = value
+    //       var searchKey: any = childSnapshot.key
+    //       this.getCount(searchKey).then(async value => {
+    //         var tempObj: MyClass = childSnapshot.val()
+    //         console.log(tempObj)
+    //         tempObj.classTeacher = teacher.firstName + " " + teacher.lastName
+    //         tempObj.count = value
+    //         tempObj.key = childSnapshot.key
+    //         this.sourceAllClasses.push(tempObj);
+    //         if (this.sourceAllClasses.length == totalClasses) {
+    //           this.allClasses = this.sourceAllClasses
+    //           await this.dismissLoadingController()
+    //         }
+    //       })
+    //     })
+    //   })
+    // })
   }
 
-  async getTeacher(teacherId: string): Promise<any> {
-    const db = getDatabase();
-    var teacher: Teacher;
-    const snapshot = await get(ref(db, `users/${teacherId}`))
-    teacher = snapshot.val();
-    return teacher;
-  }
+  // async getTeacher(teacherId: string): Promise<any> {
+  //   const db = getDatabase();
+  //   var teacher: Teacher;
+  //   const snapshot = await get(ref(db, `users/${teacherId}`))
+  //   teacher = snapshot.val();
+  //   return teacher;
+  // }
 
-  async getCount(classId: string): Promise<any> {
-    const db = getDatabase();
-    var studentCount: number
-    const snapshot = await get(ref(db, `classStudents/${classId}`))
-    studentCount = snapshot.size;
-    return studentCount;
-  }
+  // async getCount(classId: string): Promise<any> {
+  //   const db = getDatabase();
+  //   var studentCount: number
+  //   const snapshot = await get(ref(db, `classStudents/${classId}`))
+  //   studentCount = snapshot.size;
+  //   return studentCount;
+  // }
 
 
   async pleaseWaitLoader() {
@@ -177,7 +186,7 @@ export class ClassesPage implements OnInit {
       this.allClasses = this.sourceAllClasses
     }
     else {
-      this.allClasses = this.sourceAllClasses.filter(element => element.className.toString().toLowerCase().includes(searchQuery)
+      this.allClasses = this.sourceAllClasses.filter((element: { className: { toString: () => string; }; section: string; classTeacher: string; }) => element.className.toString().toLowerCase().includes(searchQuery)
         || element.section.toLowerCase().includes(searchQuery)
         || element.classTeacher.toLowerCase().includes(searchQuery)
       )

@@ -1,0 +1,77 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start">
+      <ion-button [routerLink]="['/exam-lists',classKey,subject,batchKey]">
+        <ion-icon name="return-up-back-outline">
+        </ion-icon>
+      </ion-button>
+
+    </ion-buttons>
+    <ion-buttons slot="secondary" (click)="saveMarks()">
+      <ion-button>
+        Save
+      </ion-button>
+    </ion-buttons>
+    <ion-buttons slot="primary">
+      <ion-button id="attendance-popover-button">
+        <ion-icon slot="icon-only" ios="ellipsis-horizontal" md="ellipsis-vertical"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Update Marks</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-popover trigger="attendance-popover-button" [dismissOnSelect]="true">
+  <ng-template>
+    <ion-content>
+      <ion-list>
+        <ion-item *ngIf="!isCorrectionCompleted" [button]="true" [detail]="false" (click)="updateCorrectionBoolean()">
+          Mark as correction completed</ion-item>
+          <ion-item *ngIf="isCorrectionCompleted" [button]="true" [detail]="false" (click)="updateCorrectionBoolean()">
+            Mark as correction incompleted</ion-item>
+        </ion-list>
+    </ion-content>
+  </ng-template>
+</ion-popover>
+
+<ion-content>
+
+  <ion-card>
+    <ion-card-header>
+      <ion-card-title>Exam : {{examKey}}</ion-card-title>
+      <ion-card-title>Subject : {{subject|titlecase }}</ion-card-title>
+      <!-- <ion-card-subtitle>Total classes taken till now: </ion-card-subtitle> -->
+    </ion-card-header>
+    <ion-card-content>
+
+
+      <ion-list>
+        <ion-grid>
+          <ion-row>
+            <ion-col size="9" class="ion-text-center">
+              Name
+            </ion-col>
+            <ion-col size="3" class="ion-text-center">
+              Marks
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-grid>
+          <ion-row *ngFor="let item of viewList">
+            <ion-col size="9" class="ion-text-center" style="display: flex; align-items: center;justify-content: center;">
+              {{item.name}}
+            </ion-col>
+            <ion-col size="3">
+              <ion-item fill="outline">
+                <ion-input value="{{item.marks}}" (ionChange)="updateMarks($event,item.key)"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+          <hr>
+        </ion-grid>
+
+      </ion-list>
+    </ion-card-content>
+  </ion-card>
+</ion-content>

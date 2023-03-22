@@ -86,6 +86,7 @@ export class AttendanceMonthlyPage implements OnInit {
             tempObj.profilePic = studentObj.profilePic
             tempObj.attendanceCount = childsnapshot
             this.sourceAttendanceList.push(tempObj)
+            this.sourceAttendanceList.sort((a: any, b: any) => a.name.localeCompare(b.name))
             if (this.sourceAttendanceList.length == totalStudents) {
               this.attendanceList = this.sourceAttendanceList
               await this.dismissLoadingController()

@@ -81,8 +81,10 @@ export class AttendanceUpdatePage implements OnInit {
               tempObj.profilePic = studentObj.profilePic
               tempObj.morning = childsnapshot[key]['morning']
               tempObj.afternoon = childsnapshot[key]['afternoon']
-              if(this.sourceAttendanceList.length<totalStudents)
+              if(this.sourceAttendanceList.length<totalStudents){
                 this.sourceAttendanceList.push(tempObj)
+                this.sourceAttendanceList.sort((a: any, b: any) => a.name.localeCompare(b.name))
+              }
               if (this.sourceAttendanceList.length == totalStudents) {
                 this.attendanceList = this.sourceAttendanceList
                 await this.dismissLoadingController();

@@ -1,6 +1,7 @@
 <ion-fab vertical="top" horizontal="end" slot="fixed">
-  <ion-fab-button (click)="showImg()">
-      <img alt="png" src="{{loggedInUserProfile.profilePic}}" onError="src='https://ionicframework.com/docs/img/demos/avatar.svg'" />
+  <ion-fab-button (click)="routeToMyAccount()">
+    <img alt="png" src="{{loggedInUserProfile.profilePic}}"
+      onError="src='https://ionicframework.com/docs/img/demos/avatar.svg'" />
   </ion-fab-button>
 </ion-fab>
 
@@ -13,7 +14,6 @@
 </div>
 <div class="content">
   <div class="upper-container">
-
     <ion-card class="name-card">
       <ion-card-header>
         <ion-card-title>Hey {{loggedInUserProfile.firstName}} {{loggedInUserProfile.lastName}}!</ion-card-title>
@@ -31,22 +31,22 @@
         <ion-card-subtitle>{{today}}</ion-card-subtitle>
       </ion-card-header>
 
-      <ion-card-content >
+      <ion-card-content>
         "{{quote}}"
       </ion-card-content>
     </ion-card>
 
   </div>
   <div class="lower-container">
-<ion-grid>
+    <ion-grid>
       <ion-row>
         <ion-col>
-            <ion-card class="tiles" (click)="routeToClasses()">
-              <ion-card-header class="tile-header">
-                <h1><ion-icon name="list-outline"></ion-icon></h1>
-                <ion-card-title>Classes</ion-card-title>
-              </ion-card-header>
-            </ion-card>          
+          <ion-card class="tiles" (click)="routeToClasses()">
+            <ion-card-header class="tile-header">
+              <h1><ion-icon name="list-outline"></ion-icon></h1>
+              <ion-card-title>Classes</ion-card-title>
+            </ion-card-header>
+          </ion-card>
         </ion-col>
         <ion-col>
           <ion-card class="tiles" (click)="routeToAttendance()">
@@ -57,25 +57,25 @@
           </ion-card>
         </ion-col>
       </ion-row>
-      <ion-row >
-        <ion-col >
-          <ion-card class="tiles" (click)="routeToTimeTable()">
+      <ion-row>
+        <ion-col>
+          <ion-card class="tiles" (click)="routeToMyClasses()">
             <ion-card-header class="tile-header">
               <h1><ion-icon name="list-outline"></ion-icon></h1>
-              <ion-card-title>Time Table</ion-card-title>
+              <ion-card-title>My Classes</ion-card-title>
             </ion-card-header>
           </ion-card>
         </ion-col>
         <ion-col>
-          <ion-card class="tiles" (click)="routeToMyAccount()">
+          <ion-card class="tiles" (click)="routeToResults()">
             <ion-card-header class="tile-header">
               <h1><ion-icon name="list-outline"></ion-icon></h1>
-              <ion-card-title>My Account</ion-card-title>
+              <ion-card-title>Results</ion-card-title>
             </ion-card-header>
           </ion-card>
         </ion-col>
       </ion-row>
-  
+
     </ion-grid>
   </div>
 </div>

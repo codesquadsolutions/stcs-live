@@ -5,6 +5,7 @@ import { AlertController, ToastController, LoadingController } from '@ionic/angu
 import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, query, orderByChild, equalTo, onValue, update } from 'firebase/database';
 import { UserConstant } from 'src/app/appConstants/userConstants';
+import { ClassService } from 'src/app/services/class/class.service';
 
 @Component({
   selector: 'app-teacher-allocation-view',
@@ -16,7 +17,7 @@ export class TeacherAllocationViewPage implements OnInit {
   private loading: any
   classKey: any
   staffs: any
-  allocationDetails: object = []
+  allocationDetails: any = []
   database = getDatabase();
   editValue: boolean = false
   public allocationForm: any
@@ -25,7 +26,7 @@ export class TeacherAllocationViewPage implements OnInit {
   public isClassTeacher:boolean = false
   public currentUser: any = UserConstant.currentUser
 
-  constructor(private allocationViewAlertController: AlertController, private router: Router, private activatedRouter: ActivatedRoute, private toastController: ToastController, private formBuilder: FormBuilder, private allocationViewLoadingControl: LoadingController) { }
+  constructor(private classService:ClassService,private allocationViewAlertController: AlertController, private router: Router, private activatedRouter: ActivatedRoute, private toastController: ToastController, private formBuilder: FormBuilder, private allocationViewLoadingControl: LoadingController) { }
 
   ngOnInit() {
     this.checkUserLoggedIn()
@@ -70,10 +71,9 @@ export class TeacherAllocationViewPage implements OnInit {
   }
 
   getTeacherAllocation() {
-    const starCountRef = ref(this.database, 'teacherAllocation/' + this.classKey);
-    onValue(starCountRef, async (snapshot) => {
-      await this.pleaseWaitLoader()
-      this.allocationDetails = snapshot.val();
+    this.classService.getAllocations(this.batchKey,this.classKey).then((result)=>{
+      this.allocationDetails = []
+      this.allocationDetails = result
       if (!this.allocationDetails) {
         this.allocationDetails = { kannada: "", english: "", mathematics: "", science: "", socialScience: "", hindi: "" }
         this.createAllocationForm(this.allocationDetails)
@@ -81,7 +81,7 @@ export class TeacherAllocationViewPage implements OnInit {
       else {
         this.createAllocationForm(this.allocationDetails)
       }
-    });
+    })
   }
 
   async createAllocationForm(allocationDetail: any) {
@@ -130,7 +130,6 @@ export class TeacherAllocationViewPage implements OnInit {
           cssClass: 'alert-button-confirm',
           handler: async () => {
             alert.dismiss()
-            await this.pleaseWaitLoader()
             this.updateAllocationForm()
           },
         },
@@ -141,11 +140,11 @@ export class TeacherAllocationViewPage implements OnInit {
 
   }
 
-  updateAllocationForm() {
-    update(ref(this.database, `teacherAllocation/${this.classKey}`), this.allocationForm.value);
-    this.editValue = false
-    this.presentToast('top', "Respective teacher has been allocated to subjects!")
-    this.dismissLoadingController()
+  async updateAllocationForm() {
+    this.classService.updateAllocations(this.batchKey,this.classKey,this.allocationForm.value).then(async ()=>{
+      this.editValue = false
+      this.presentToast('top', "Respective teacher has been allocated to subjects!")
+    })
   }
 
   async presentToast(position: 'top' | 'middle' | 'bottom', message: string) {

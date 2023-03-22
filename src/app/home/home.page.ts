@@ -106,22 +106,40 @@ export class HomePage implements OnInit {
     }
   }
 
-  async routeToClasses() {
+  routeToClasses() {
     this.router.navigateByUrl(`/classes/${this.currentBatchKey}`);
   }
 
-  async routeToTimeTable() {
-    const alert = await this.alertController.create({
-      header: 'Alert',
-      message: 'This feature will be enabled in the next update.',
-      buttons: ['OK'],
-    });
+  async routeToMyClasses() {
+    console.log(this.loggedInUserClass)
+    this.router.navigateByUrl(
+      `/my-classes/${this.currentBatchKey}`
+    );
+    // const alert = await this.alertController.create({
+    //   header: 'Alert',
+    //   message: 'This feature will be enabled in the next update.',
+    //   buttons: ['OK'],
+    // });
 
-    await alert.present();
+    // await alert.present();
   }
 
-  async routeToMyAccount() {
-    this.router.navigateByUrl(`/my-account`);
+  routeToMyAccount() {
+    this.router.navigateByUrl(`/my-account`)
+  }
+
+  async routeToResults(){
+    if (this.loggedInUserClass == undefined) {
+      const alert = await this.alertController.create({
+        header: 'Permission denied!',
+        subHeader: 'Only class teacher can view their class results.',
+        buttons: ['ok'],
+      });
+      await alert.present();
+    } else {
+      this.router.navigateByUrl(`/results-exam-lists/${this.currentBatchKey}/${this.loggedInUserClass}`)
+
+    }
   }
 
   getUserClassInfo() {

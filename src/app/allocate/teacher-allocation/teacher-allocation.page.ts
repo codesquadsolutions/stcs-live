@@ -5,6 +5,7 @@ import { getAuth } from 'firebase/auth';
 import { getDatabase, ref, query, orderByChild, onValue, get } from 'firebase/database';
 import { MyClass } from 'src/app/models/myClass.model';
 import { Teacher } from 'src/app/models/teacher.model';
+import { ClassService } from 'src/app/services/class/class.service';
 
 @Component({
   selector: 'app-teacher-allocation',
@@ -15,15 +16,15 @@ export class TeacherAllocationPage implements OnInit {
 
   private loading:any
   year = new Date().getFullYear()
-  allClasses: MyClass[] = []
-  sourceAllClasses: MyClass[] = []
+  allClasses: any = []
+  sourceAllClasses: any = []
   public batchKey:any
   public tempData:any
   public database = getDatabase();
   public isSearch:boolean = false
   public searchString:string = ""
   public auth = getAuth();
-  constructor(private activatedRouter: ActivatedRoute,private router:Router, private allocationLoadingControl: LoadingController) { }
+  constructor(private classService: ClassService,private activatedRouter: ActivatedRoute,private router:Router, private allocationLoadingControl: LoadingController) { }
 
   ngOnInit() {
     this.checkUserLoggedIn()
@@ -42,38 +43,44 @@ export class TeacherAllocationPage implements OnInit {
     }
   }
 
-  getClasses() {
-    
-    const classesRef = ref(this.database, `classes/${this.batchKey}`);
-    const classQuery = query(classesRef, orderByChild('className'));
-
-    onValue(classQuery, async (snapshot) => {
-      await this.pleaseWaitLoader()
-      if (snapshot.val() == null) {
-        await this.dismissLoadingController()
-        return
-      }
-      const totalClasses = snapshot.size
-      this.sourceAllClasses = []
-      snapshot.forEach((childSnapshot) => {
-        let teacher: any
-        this.getTeacher(childSnapshot.val().classTeacher).then(value => {
-          teacher = value
-          var classKey:any = childSnapshot.key
-          this.getCount(classKey).then(value => {
-            var tempObj: MyClass = childSnapshot.val()
-            tempObj.classTeacher = teacher.firstName + " " + teacher.lastName
-            tempObj.count = value
-            tempObj.key = childSnapshot.key
-            this.sourceAllClasses.push(tempObj);
-            if (this.sourceAllClasses.length == totalClasses) {
-              this.allClasses = this.sourceAllClasses
-              this.dismissLoadingController()
-            }
-          })
-        })
-      })
+  async getClasses() {
+    await this.pleaseWaitLoader()
+    this.classService.getAllClassesWithTeachers(this.batchKey).then(async (result) => {
+      console.log(result)
+      this.allClasses = result
+      this.sourceAllClasses = result
+      await this.dismissLoadingController()
     })
+    // const classesRef = ref(this.database, `classes/${this.batchKey}`);
+    // const classQuery = query(classesRef, orderByChild('className'));
+
+    // onValue(classQuery, async (snapshot) => {
+    //   await this.pleaseWaitLoader()
+    //   if (snapshot.val() == null) {
+    //     await this.dismissLoadingController()
+    //     return
+    //   }
+    //   const totalClasses = snapshot.size
+    //   this.sourceAllClasses = []
+    //   snapshot.forEach((childSnapshot) => {
+    //     let teacher: any
+    //     this.getTeacher(childSnapshot.val().classTeacher).then(value => {
+    //       teacher = value
+    //       var classKey:any = childSnapshot.key
+    //       this.getCount(classKey).then(value => {
+    //         var tempObj: MyClass = childSnapshot.val()
+    //         tempObj.classTeacher = teacher.firstName + " " + teacher.lastName
+    //         tempObj.count = value
+    //         tempObj.key = childSnapshot.key
+    //         this.sourceAllClasses.push(tempObj)
+    //         if (this.sourceAllClasses.length == totalClasses) {
+    //           this.allClasses = this.sourceAllClasses
+    //           this.dismissLoadingController()
+    //         }
+    //       })
+    //     })
+    //   })
+    // })
   }
 
 
@@ -108,7 +115,7 @@ export class TeacherAllocationPage implements OnInit {
       this.allClasses = this.sourceAllClasses
     }
     else{
-      this.allClasses = this.sourceAllClasses.filter(element => element.className.toString().toLowerCase().includes(searchQuery)
+      this.allClasses = this.sourceAllClasses.filter((element:any) => element.className.toString().toLowerCase().includes(searchQuery)
                       || element.section.toLowerCase().includes(searchQuery) 
                       || element.classTeacher.toLowerCase().includes(searchQuery)
       )
