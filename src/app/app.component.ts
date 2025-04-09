@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { environment } from 'src/environments/environment.prod';
+import { environment } from 'src/environments/environment';
 import { enableProdMode } from '@angular/core';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
 import { Router } from '@angular/router';
@@ -19,7 +19,7 @@ export class AppComponent {
 
   constructor(private alertController:AlertController) {
     initializeApp(environment.firebaseConfig);
-    enableProdMode();
+    //enableProdMode();
     this.getCurrentBatchKey()
   }
 

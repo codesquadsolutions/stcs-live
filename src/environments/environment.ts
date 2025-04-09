@@ -3,7 +3,17 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebaseConfig: {
+    apiKey: 'AIzaSyBofed2IEikvVkTDUWWWbrFstcgdKbFl-0',
+    authDomain: 'stcs-live.firebaseapp.com',
+    databaseURL: 'https://stcs-live-default-rtdb.firebaseio.com',
+    projectId: 'stcs-live',
+    storageBucket: 'stcs-live.appspot.com',
+    messagingSenderId: '753727762963',
+    appId: '1:753727762963:web:6281c60ce9faed6b1f45e6',
+    measurementId: 'G-SZMWGQLSF2',
+  },
 };
 
 /*

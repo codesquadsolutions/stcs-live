@@ -39,7 +39,7 @@
 </ion-popover>
 
 
-<ion-content>
+<ion-content fixed-slot-placement="before">
   <form [formGroup]="updateForm" *ngIf="updateForm" (ngSubmit)="save()">
     <ion-card>
       <div class="profile-image">

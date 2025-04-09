@@ -2,13 +2,12 @@
 export const environment = {
   production: true,
   firebaseConfig: {
-    apiKey: "AIzaSyBofed2IEikvVkTDUWWWbrFstcgdKbFl-0",
-  authDomain: "stcs-live.firebaseapp.com",
-  databaseURL: "https://stcs-live-default-rtdb.firebaseio.com",
-  projectId: "stcs-live",
-  storageBucket: "stcs-live.appspot.com",
-  messagingSenderId: "753727762963",
-  appId: "1:753727762963:web:02fa86e79b189c641f45e6",
-  measurementId: "G-BY518K7C5M"
+    apiKey: "AIzaSyD5w6viFXGn2md1QSPBMWD2MYTLfqNj73A",
+    authDomain: "motor-sport-club.firebaseapp.com",
+    databaseURL: "https://motor-sport-club-default-rtdb.firebaseio.com",
+    projectId: "motor-sport-club",
+    storageBucket: "motor-sport-club.appspot.com",
+    messagingSenderId: "758588849404",
+    appId: "1:758588849404:web:559d9568cc774a1a4b2b79"
   }
 }
